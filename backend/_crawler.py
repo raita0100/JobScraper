@@ -771,13 +771,3 @@ l.main()
 elapsed_time = time.perf_counter() - start_time
 
 print(f"\n\n\t Total time took for excecuting the program : {elapsed_time}\n\n")
-
-
-'''
-l = Linked_in_scrape()
-l.prepare_url()
-l.main()
-
-linked_in_ = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=ui%20developer&location=Hyderabad%2C%20Telangana&redirect=false&position=1&pageNum=0&start=550"
-
-'''
