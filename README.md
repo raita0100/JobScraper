@@ -7,4 +7,4 @@ In this project we are trying to scrape the website. Scraping happens here ***as
 
 ## Requirements {#req-id}
 
-refer [description]{#desc-id}
+refer [description](#desc-id)
