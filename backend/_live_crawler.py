@@ -751,16 +751,6 @@ class Linked_in_scrape:
 
 start_time = time.perf_counter()
 
-# get indeed data
-i = Indeed_scrape()
-i.prepare_url()
-i.main()
-
-# get Linked in data
-l = Linked_in_scrape()
-l.prepare_url()
-l.main()
-
 elapsed_time = time.perf_counter() - start_time
 
 print(f"\n\n\t Total time took for excecuting the program : {elapsed_time}\n\n")
