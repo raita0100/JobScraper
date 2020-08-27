@@ -1,10 +1,10 @@
 # JobScraper
 > ### Scraping project
 
-## Description {#desc-id}
+## Description
 
 In this project we are trying to scrape the website. Scraping happens here ***asynchronously***.
 
-## Requirements {#req-id}
+## Requirements
 
-refer [description](#desc-id)
+refer [description](#Description)
