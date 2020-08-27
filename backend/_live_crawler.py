@@ -190,9 +190,6 @@ class Indeed_scrape:
             i+=1
             if i == 1:
                 continue
-            #x = li.find(name='a', attrs={'aria-label':'next'})
-            #li = bs(str(li), 'html.parser')
-            #if li.find(name='a', attrs={'aria-label': 'Next'}) != None:
             try:
 
                 if li.a['aria-label'] == 'Next':
@@ -283,8 +280,6 @@ class Indeed_scrape:
             
             asyncio.run(self.get_card_data(out_path=out_path, obj=obj))
 
-            # call to each job links
-            # obj.main()
 
         except RuntimeError as e:
             print("")
@@ -461,7 +456,6 @@ class Linked_in_scrape:
         
         headers = {
             'authority': 'www.linkedin.com',
-            #'path': '/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=ui%20developer&location=Hyderabad%2C%20Telangana&redirect=false&position=1&pageNum=0&start='+str(start),
             'scheme': 'https',
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
