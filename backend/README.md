@@ -29,7 +29,7 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   First store your job search keywords and locations in the [keys.py](https://github.com/raita0100/JobScraper/blob/master/backend/keys.py) file.  
   then run 
   ```cmd 
-  python _crawler.py 
+  >> python _crawler.py 
   ```
   
 
