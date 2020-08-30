@@ -775,16 +775,22 @@ def start_indeed(key: str, loc: str):
     i.main()
 
 
-if __name__ == '__main__':
+def main(key: str, loc: str):
 
-    print(f"\n\n\t{args}\n\n")
-    f_name = f_name+'_'+args['key'].replace(" ", "_").replace(",","_")+'_'+args['loc'].replace(" ", "_").replace(",","_")
+    global f_name
+    f_name = f_name+'_'+key.replace(" ", "_").replace(",","_")+'_'+loc.replace(" ", "_").replace(",","_")
 
     import threading
 
-    th_1 = threading.Thread(target=start_linked, args=(args['key'], args['loc'],))
-    th_2 = threading.Thread(target=start_indeed, args=(args['key'], args['loc'],))
+    th_1 = threading.Thread(target=start_linked, args=(key, loc,))
+    th_2 = threading.Thread(target=start_indeed, args=(key, loc,))
 
     th_1.start()
     th_2.start()
     
+
+if __name__ == '__main__':
+
+    print(f"\n\n\t{args}\n\n")
+
+    main(key=args['key'], loc=args['loc'])
