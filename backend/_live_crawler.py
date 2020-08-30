@@ -31,9 +31,9 @@ import keys as keys
 logger = logging.getLogger(__name__)
 
 # create a handler
-f_name = time.strftime('%Y_%m_%d')
+f_start = time.strftime('%Y_%m_%d')
 pwd = pathlib.Path(__file__).parent
-log_file = pwd.joinpath(f_name+".log")
+log_file = pwd.joinpath(f_start+".log")
 # print(f"filename {log_file}")
 
 f_handler = logging.FileHandler(filename=log_file)
@@ -51,31 +51,33 @@ logger.addHandler(f_handler)
 class Indeed_scrape:
 
     # defining the constructor
-    def __init__(self):
+    def __init__(self, key: str, loc: str):
 
+        self.key = key
+        self.loc = loc
+        self.f_name = f_start+"_"+key.replace(" ","_").replace(",", "_")+"_"+loc.replace(" ","_").replace(",", "_")
         self.url = "https://www.indeed.co.in/jobs?"
         self.url_list = []
         self.pages_found = 0
         self.jobs_found = 0
         
     # function for preaparing the url
-    def prepare_url(self, key: str, loc: str) -> None:
+    def prepare_url(self) -> None:
 
         '''
         Params :
-            key: [type -> str] search keyword for job
-            loc: [type -> str] Location of job
+            None
 
         Return :
             None
 
         Does :
-            Loop throught all the keywords and location from keys file,
+            Loop throught all the keywords and locations,
             and forms all the possible combinations
         '''
 
-        key = ((key.replace(" ", "+")).replace(",", "%2C")).replace("/", "%2F")
-        loc = ((loc.replace(" ", "+")).replace(",", "%2C")).replace("/", "%2F")
+        key = ((self.key.replace(" ", "+")).replace(",", "%2C")).replace("/", "%2F")
+        loc = ((self.loc.replace(" ", "+")).replace(",", "%2C")).replace("/", "%2F")
 
         self.url_list.append(self.url+'q='+key+'&l='+loc)
 
@@ -155,7 +157,7 @@ class Indeed_scrape:
                 #await wr_file.write(bytes(json.dumps(fetched_data), 'utf-8'))
                 await wr_file.write(json.dumps(fetched_data)+"\n")
                 await obj.main(data = fetched_data)
-            #await wr_file.write(json.dumps(jobs))ī
+            #await wr_file.write(json.dumps(jobs))
         await self.find_next_pages(data, session, file, obj)
 
     # function for finding next page exist or not and fetch data from there
@@ -190,6 +192,9 @@ class Indeed_scrape:
             i+=1
             if i == 1:
                 continue
+            #x = li.find(name='a', attrs={'aria-label':'next'})
+            #li = bs(str(li), 'html.parser')
+            #if li.find(name='a', attrs={'aria-label': 'Next'}) != None:
             try:
 
                 if li.a['aria-label'] == 'Next':
@@ -236,7 +241,7 @@ class Indeed_scrape:
                 await self.parse_data(data=raw_data, file=file, session=session, obj=obj)
 
             except Exception as e:
-                logger.exception(f"\nException occured while executing url {url}\n\n")
+                logger.exception(f"\nException occured while parsing dta from url {url}\n\n")
     
     # gathering all jobs in a asynchronous way
     async def get_card_data(self, out_path: IO, obj: '__main__._Summary_indeed') -> None:
@@ -269,17 +274,19 @@ class Indeed_scrape:
 
         start = time.perf_counter()
 
-        out_path = pwd.joinpath(f_name+'_indeed_data.txt')
+        out_path = pwd.joinpath(self.f_name+'_indeed_data.txt')
 
         with open(out_path, 'w') as write_file:
             write_file.write("")
         write_file.close()
 
         try:
-            obj = self._Summary_indeed(parent_call = self)
+            obj = self._Summary_indeed(parent_call = self, file_start = self.f_name)
             
             asyncio.run(self.get_card_data(out_path=out_path, obj=obj))
 
+            # call to each job links
+            # obj.main()
 
         except RuntimeError as e:
             print("")
@@ -292,9 +299,9 @@ class Indeed_scrape:
     class _Summary_indeed:
 
         # defining the constructor
-        def __init__(self, parent_call):
+        def __init__(self, parent_call, file_start: IO):
 
-            self.f_start = f_name
+            self.file_start = file_start
             self.outer = parent_call
 
         # function for scraping the data and saving it to the file
@@ -372,7 +379,7 @@ class Indeed_scrape:
 
             '''
 
-            write_path = pwd.joinpath(f_name+'_indeed_summary.txt')
+            write_path = pwd.joinpath(self.file_start+'_indeed_summary.txt')
 
             f_stat = pathlib.Path(write_path)
 
@@ -396,7 +403,13 @@ class Indeed_scrape:
 class Linked_in_scrape:
 
     # defining the constructor
-    def __init__(self):
+    def __init__(self, key: str, loc: str):
+
+        self.key = key
+
+        self.loc = loc
+
+        self.f_name = f_start+"_"+key.replace(" ","_").replace(",", "_")+"_"+loc.replace(" ","_").replace(",", "_")
 
         # url from where we want to scrape
         self.url = "https://www.linkedin.com/jobs/search?"
@@ -412,7 +425,7 @@ class Linked_in_scrape:
         self.jobs_found = 0
         
     # function for preaparing the url
-    def prepare_url(self, key: str, loc: str='') -> None:
+    def prepare_url(self) -> None:
 
         '''
         Params :
@@ -427,8 +440,8 @@ class Linked_in_scrape:
             and forms all the possible combinations
         '''
 
-        key = ((key.replace(" ", "%20")).replace(",", "%2C")).replace("/", "%2F")
-        loc = ((loc.replace(" ", "%20")).replace(",", "%2C")).replace("/", "%2F")
+        key = ((self.key.replace(" ", "%20")).replace(",", "%2C")).replace("/", "%2F")
+        loc = ((self.loc.replace(" ", "%20")).replace(",", "%2C")).replace("/", "%2F")
 
         self.url_list.append(self.more_res_url+'keywords='+key+'&location='+loc+'&redirect=false&position=1&pageNum=0&start=')
                 
@@ -456,6 +469,7 @@ class Linked_in_scrape:
         
         headers = {
             'authority': 'www.linkedin.com',
+            #'path': '/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=ui%20developer&location=Hyderabad%2C%20Telangana&redirect=false&position=1&pageNum=0&start='+str(start),
             'scheme': 'https',
             'accept-encoding': 'gzip, deflate, br',
             'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
@@ -540,9 +554,15 @@ class Linked_in_scrape:
         else:
             if raw_data:
 
-                await self.parse_data(data=raw_data, file=file, obj=obj)
+                try :
+                    await self.parse_data(data=raw_data, file=file, obj=obj)
 
-                await self.get_data(url=url, file=file, session=session, start=start+25, obj=obj)
+                    await self.get_data(url=url, file=file, session=session, start=start+25, obj=obj)
+                
+                except Exception as e:
+
+                    logger.exception(f"Exception occured while parsing data from url\n{url}")
+
 
             else:
                 #print("\n\nData not returned\n\n")
@@ -594,13 +614,13 @@ class Linked_in_scrape:
         '''
         start_t = time.perf_counter()
 
-        out_path = pwd.joinpath(f_name+'_linked_in_data.txt')
+        out_path = pwd.joinpath(self.f_name+'_linked_in_data.txt')
 
         with open(out_path, 'w') as fp:
             fp.write("")
         fp.close()
         try:
-            obj = self._Summary(f_name=f_name, read_file=out_path, parent_call=self)
+            obj = self._Summary(f_name=self.f_name, parent_call=self)
 
             asyncio.run(self.get_card_data(file=out_path, obj = obj))
             
@@ -620,10 +640,9 @@ class Linked_in_scrape:
     class _Summary:
 
         # defining the constructor
-        def __init__(self, f_name: str, read_file: IO, parent_call):
+        def __init__(self, f_name: str, parent_call):
 
             self.f_start = f_name
-            self.read_file = read_file
             self.outer = parent_call
 
         # function to parse and save data
@@ -736,61 +755,24 @@ class Linked_in_scrape:
                 logger.exception("Exception occured : "+str(vars(e)))
                 #print("Exception occured : "+str(vars(e)))
 
-            
-
-
-
-'''
-# start the timer
-
-start_time = time.perf_counter()
-
-elapsed_time = time.perf_counter() - start_time
-
-print(f"\n\n\t Total time took for excecuting the program : {elapsed_time}\n\n")
-'''
-
-import argparse
-
-ap = argparse.ArgumentParser()
-
-ap.add_argument("-k", "--key", required = True, type = str,
-        help = "Keyword for search")
-ap.add_argument("-l", "--loc", required = False, type = str,
-        help = "Location of work", default='')
-
-args = vars(ap.parse_args())
-
-
 def start_linked(key: str, loc: str):
 
-    l = Linked_in_scrape()
-    l.prepare_url(key = key, loc = loc)
+    l = Linked_in_scrape(key = key, loc = loc)
+    l.prepare_url()
     l.main()
 
 def start_indeed(key: str, loc: str):
 
-    i = Indeed_scrape()
-    i.prepare_url(key = key, loc = loc)
+    i = Indeed_scrape(key = key, loc = loc)
+    i.prepare_url()
     i.main()
-
 
 def main(key: str, loc: str):
 
-    global f_name
-    f_name = f_name+'_'+key.replace(" ", "_").replace(",","_")+'_'+loc.replace(" ", "_").replace(",","_")
-
     import threading
-
+    
     th_1 = threading.Thread(target=start_linked, args=(key, loc,))
     th_2 = threading.Thread(target=start_indeed, args=(key, loc,))
 
     th_1.start()
     th_2.start()
-    
-
-if __name__ == '__main__':
-
-    print(f"\n\n\t{args}\n\n")
-
-    main(key=args['key'], loc=args['loc'])
