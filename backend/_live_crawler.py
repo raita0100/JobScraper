@@ -31,7 +31,7 @@ import keys as keys
 logger = logging.getLogger(__name__)
 
 # create a handler
-f_start = time.strftime('%Y_%m_%d')
+f_start = 'searches/'+time.strftime('%Y_%m_%d')
 pwd = pathlib.Path(__file__).parent
 log_file = pwd.joinpath(f_start+".log")
 # print(f"filename {log_file}")
