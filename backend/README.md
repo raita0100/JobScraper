@@ -29,5 +29,10 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   crawler.main(key="key word", loc="location of work")
   
   ```
-  
-
+- #### Running in flask server as api.
+  > For windows
+  ```cmd
+  >> cd to\the\repo\backend
+  >> set FLASK_APP=app.py
+  >> flask run
+  ```
