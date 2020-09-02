@@ -28,13 +28,6 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   
   crawler.main(key="key word", loc="location of work")
   
-  ```  
-  
-- for running file [_crawler.py](https://github.com/raita0100/JobScraper/blob/master/backend/_crawler.py).  
-  First store your job search keywords and locations in the [keys.py](https://github.com/raita0100/JobScraper/blob/master/backend/keys.py) file.  
-  then run 
-  ```cmd
-  >> python _crawler.py 
   ```
   
 

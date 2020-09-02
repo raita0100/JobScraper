@@ -22,9 +22,6 @@ from typing import IO
 # importing time module
 import time
 
-#importing keys file
-import keys as keys
-
 # setting the logging files
 
 # create a logger with name with filename
@@ -143,7 +140,7 @@ class Indeed_scrape:
         async with aiofiles.open(file, 'a') as wr_file:
             for div in div_cards:
                 fetched_data = {
-                    'id': self.jobs_found,
+                    'id': "i_"+str(self.jobs_found),
                     'title': (div.find('h2', {'class', 'title'}).a.text).lstrip(),
                     'comp_name': (div.find('div', {'class', 'sjcl'}).find('span',{'class', 'company'}).text).lstrip(),
                     'location': (div.find('div', {'class', 'sjcl'}).find('div', {'class', 'recJobLoc'})['data-rc-loc']).lstrip(),
@@ -510,7 +507,7 @@ class Linked_in_scrape:
             
             for l in _lists:
                 fetched_data = {
-                    'id' : self.jobs_found,
+                    'id' : "l_"+str(self.jobs_found),
                     'title' : l.div.h3.text,
                     'comp_name' : l.div.h4.text,
                     'location' : l.div.span.text,
@@ -646,7 +643,7 @@ class Linked_in_scrape:
             self.outer = parent_call
 
         # function to parse and save data
-        async def parse_and_write(self, url: str, id: int, data: str, file: IO) -> None:
+        async def parse_and_write(self, url: str, id: str, data: str, file: IO) -> None:
 
             '''
             Parameters:
