@@ -29,7 +29,7 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   crawler.main(key="key word", loc="location of work")
   
   ```
-- #### Running in flask server as api.
+- #### Running in flask server as api. [app.py](https://github.com/raita0100/JobScraper/blob/master/backend/app.py)
   > For windows
   ```cmd
   >> cd to\the\repo\backend
@@ -43,3 +43,16 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   $ export FLASK_APP=app.py
   $ flask run
   ```
+## Data we get
+- After scraping happens the scraped data will be stored inthe format fo
+```json
+{
+  "id": "job_id", 
+  "title": "Title of job", 
+  "comp_name": "Name of a company", 
+  "location": "job location", 
+  "posting": "hosted time", 
+  "link": "link for hosted job", 
+  "summary": "Detail about job"
+}
+```
