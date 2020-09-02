@@ -36,3 +36,10 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   >> set FLASK_APP=app.py
   >> flask run
   ```
+  
+  > For others
+  ```shell
+  $ cd to/the/repo/backend
+  $ export FLASK_APP=app.py
+  $ flask run
+  ```
