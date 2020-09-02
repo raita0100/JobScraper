@@ -44,7 +44,7 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   $ flask run
   ```
 ## Data we get
-- After scraping happens the scraped data will be stored inthe format fo
+- After scraping the scraped data will be stored in the format of.
 ```json
 {
   "id": "job_id", 
@@ -56,3 +56,4 @@ In this project we are trying to scrape the website. Scraping happens here ***as
   "summary": "Detail about job"
 }
 ```
+- this data will be displayed at user side.
